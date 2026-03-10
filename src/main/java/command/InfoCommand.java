@@ -15,6 +15,7 @@ public class InfoCommand extends AbstractCommand{
     public void execute(String[] args) {
         if (args.length > 0) {
             System.out.println("Команда info не принимает аргументы");
+            return;
         }
 
         System.out.println("Информация о коллекции:");

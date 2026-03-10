@@ -4,13 +4,14 @@ import model.HumanBeing;
 import model.Mood;
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class CollectionManager {
-    private ArrayDeque<HumanBeing> collection;
+    private Deque<HumanBeing> collection;
     private LocalDateTime initializationDate;
     private long nextId;
 
@@ -20,7 +21,7 @@ public class CollectionManager {
         this.nextId = 1;
     }
 
-    public void initializeCollection(ArrayDeque<HumanBeing> collection) {
+    public void initializeCollection(Deque<HumanBeing> collection) {
         if (collection == null) {
             this.collection = new ArrayDeque<>();
         }
@@ -43,7 +44,7 @@ public class CollectionManager {
     }
 
     private void sortCollection() {
-        ArrayDeque<HumanBeing> sorted = collection.stream().sorted().collect(Collectors.toCollection(ArrayDeque::new));
+        Deque<HumanBeing> sorted = collection.stream().sorted().collect(Collectors.toCollection(ArrayDeque::new));
         collection.clear();
         collection.addAll(sorted);
     }
@@ -109,8 +110,8 @@ public class CollectionManager {
         return getMin();
     }
 
-    public ArrayDeque<HumanBeing> filterByMood(Mood mood) {
-        ArrayDeque<HumanBeing> result = new ArrayDeque<>();
+    public Deque<HumanBeing> filterByMood(Mood mood) {
+        Deque<HumanBeing> result = new ArrayDeque<>();
         for (HumanBeing person : collection) {
             if (mood.equals(person.getMood())) {
                 result.add(person);
@@ -119,8 +120,8 @@ public class CollectionManager {
         return result;
     }
 
-    public ArrayDeque<HumanBeing> filterSoundtrackName(String prefix) {
-        ArrayDeque<HumanBeing> result = new ArrayDeque<>();
+    public Deque<HumanBeing> filterSoundtrackName(String prefix) {
+        Deque<HumanBeing> result = new ArrayDeque<>();
         for (HumanBeing person : collection) {
             if (person.getSoundtrackName() != null && person.getSoundtrackName().startsWith(prefix)) {
                 result.add(person);
@@ -129,7 +130,7 @@ public class CollectionManager {
         return result;
     }
 
-    public ArrayDeque<HumanBeing> getCollection() {
+    public Deque<HumanBeing> getCollection() {
         return collection;
     }
 

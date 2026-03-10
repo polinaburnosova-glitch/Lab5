@@ -1,43 +1,42 @@
 package manager;
 
-import command.Command;
+import command.AbstractCommand;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CommandManager {
-    private final Map<String, Command> commands = new HashMap<>();
+    private final Map<String, AbstractCommand> commands = new HashMap<>();
 
-    public void registerCommand(Command command) {
+    public void registerCommand(AbstractCommand command) {
         commands.put(command.getName(), command);
     }
 
-    public void executeCommand(String input) {
-        if (input == null || input.trim().isEmpty()) {
+    public void executeCommand(String userInput) {
+        if (userInput == null || userInput.trim().isEmpty()) {
             return;
         }
 
-        String[] parts = input.trim().split("\\s+");
-        String commandName = parts[0].toLowerCase();
-        String[] args = new String[parts.length - 1];
-        System.arraycopy(parts, 1, args, 0, parts.length - 1);
+        String[] inputParts = userInput.trim().split("\\s+");
+        String commandName = inputParts[0].toLowerCase();
 
-        Command command = commands.get(commandName);
+        String[] commandArguments = Arrays.copyOfRange(inputParts, 1, inputParts.length);
+
+        AbstractCommand command = commands.get(commandName);
         if (command == null) {
-            System.out.println("Несуществующая команда");
-            System.out.println("Введите help для списка всех команд");
+            System.out.println("Команда '" + commandName + "' не найдена");
+            System.out.println("Введите команду 'help' для вывода списка всех команд");
             return;
         }
+
         try {
-            command.execute(args);
-        }
-        catch (Exception e) {
-            System.out.println("Ошибка при выполнении команды");
+            command.execute(commandArguments);
+        } catch (Exception e) {
+            System.out.println("Ошибка при выполнении команды: " + e.getMessage());
         }
     }
 
-    public Map<String, Command> getCommands() {
-        return commands;
-    }
-
-
+        public Map<String, AbstractCommand> getCommands () {
+            return new HashMap<>(commands);
+        }
 }

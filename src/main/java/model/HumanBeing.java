@@ -2,6 +2,8 @@ package model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class HumanBeing implements Comparable<HumanBeing>, Serializable{
     private static final long serialVersionUID = 1L;
@@ -156,5 +158,21 @@ public class HumanBeing implements Comparable<HumanBeing>, Serializable{
             throw new IllegalArgumentException("car не может быть null");
         }
         this.car = car;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("id", id)
+                .append("name", name)
+                .append("coordinates", "(" + coordinates.getX() + ", " + coordinates.getY() + ")")
+                .append("creationDate", creationDate)
+                .append("realHero", realHero)
+                .append("hasToothpick", hasToothpick)
+                .append("impactSpeed", impactSpeed)
+                .append("weaponType", weaponType)
+                .append("mood", mood)
+                .append("car", car.getCool() ? "cool" : "not cool")
+                .toString();
     }
 }

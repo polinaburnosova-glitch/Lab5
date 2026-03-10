@@ -18,9 +18,9 @@ public class HelpCommand extends AbstractCommand {
             System.out.println("команда help не принимает аргументы");
             return;
         }
-        System.out.println("Достыпные команды: ");
-        Map<String, Command> commands = commandManager.getCommands();
-        for (Command command : commands.values()) {
+        System.out.println("Достyпные команды: ");
+        Map<String, AbstractCommand> commands = commandManager.getCommands();
+        for (AbstractCommand command : commands.values()) {
             System.out.println(command.getName());
             System.out.println(command.getDescription());
         }

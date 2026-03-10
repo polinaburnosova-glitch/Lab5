@@ -1,15 +1,14 @@
 package command;
 
-public abstract class AbstractCommand implements Command{
+public abstract class AbstractCommand {
     private final String name;
     private final String description;
 
-    public AbstractCommand(String description, String name) {
+    public AbstractCommand(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -17,4 +16,6 @@ public abstract class AbstractCommand implements Command{
     public String getDescription() {
         return description;
     }
+
+    public abstract void execute(String[] args);
 }
