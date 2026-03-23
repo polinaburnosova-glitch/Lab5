@@ -5,12 +5,21 @@ import manager.FileManager;
 import model.HumanBeing;
 import java.util.Deque;
 
+/**
+ * Команда для сохранения коллекции в файл.
+ */
 public class SaveCommand extends AbstractCommand {
     private final CollectionManager collectionManager;
     private final FileManager fileManager;
 
+    /**
+     * Конструктор.
+     *
+     * @param collectionManager менеджер коллекции
+     * @param fileManager менеджер файлов
+     */
     public SaveCommand(CollectionManager collectionManager, FileManager fileManager ) {
-        super("SaveCommand", "сохранить коллекцию в файл");
+        super("save", "сохранить коллекцию в файл");
         this.collectionManager = collectionManager;
         this.fileManager = fileManager;
     }

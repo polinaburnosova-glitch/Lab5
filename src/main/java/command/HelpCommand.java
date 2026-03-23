@@ -4,8 +4,18 @@ import manager.CommandManager;
 import manager.CollectionManager;
 import java.util.Map;
 
+/**
+ * Команда для вывода справки по доступным командам.
+ * Выводит список всех зарегистрированных команд с их описаниями.
+ */
 public class HelpCommand extends AbstractCommand {
     private final CommandManager commandManager;
+
+    /**
+     * Конструктор.
+     *
+     * @param commandManager менеджер команд
+     */
 
     public HelpCommand(CommandManager commandManager) {
         super("help", "вывести все доступные команды");

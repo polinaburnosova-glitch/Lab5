@@ -4,11 +4,20 @@ import manager.CollectionManager;
 import model.HumanBeing;
 import java.util.Optional;
 
+/**
+ * Команда для вывода элемента с минимальным id.
+ * Так как коллекция отсортирована по id, выводит первый элемент.
+ */
 public class MinByIdCommand extends AbstractCommand {
     private final CollectionManager collectionManager;
 
+    /**
+     * Конструктор.
+     *
+     * @param collectionManager менеджер коллекции
+     */
     public MinByIdCommand(CollectionManager collectionManager) {
-        super("MinByIdCommand", "вывести любой объект из коллекции, значение поля id которого является минимальным");
+        super("min_by_id", "вывести любой объект из коллекции, значение поля id которого является минимальным");
         this.collectionManager = collectionManager;
     }
 

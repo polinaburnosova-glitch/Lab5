@@ -4,11 +4,20 @@ import manager.CollectionManager;
 import model.HumanBeing;
 import java.util.Deque;
 
+/**
+ * Команда для фильтрации элементов по началу названия саундтрека.
+ * Выводит все элементы, у которых soundtrackName начинается с заданной подстроки.
+ */
 public class FilterStartsWithSoundtrackNameCommand extends AbstractCommand {
     private final CollectionManager collectionManager;
 
+    /**
+     * Конструктор.
+     *
+     * @param collectionManager менеджер коллекции
+     */
     public FilterStartsWithSoundtrackNameCommand(CollectionManager collectionManager) {
-        super("FilterStartsWithSoundtrackNameCommand", "вывести элементы, значение поля soundtrackName которых начинается с заданной подстроки");
+        super("filter_starts_with_soundtrack_name", "вывести элементы, значение поля soundtrackName которых начинается с заданной подстроки");
         this.collectionManager = collectionManager;
     }
 

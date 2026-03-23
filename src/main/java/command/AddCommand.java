@@ -1,17 +1,27 @@
 package command;
 
 import manager.CollectionManager;
-import console.AppConsole;
+import console.InputReader;
 import model.HumanBeing;
 
+/**
+ * Команда для добавления нового элемента в коллекцию.
+ * Запрашивает у пользователя все поля объекта HumanBeing и добавляет его.
+ */
 public class AddCommand extends AbstractCommand{
     private final CollectionManager collectionManager;
-    private final AppConsole console;
+    private final InputReader inputReader;
 
-    public AddCommand(CollectionManager collectionManager, AppConsole console) {
-        super("AddCommand", "добавить новый элемент в коллекцию");
+    /**
+     * Конструктор.
+     *
+     * @param collectionManager менеджер коллекции
+     * @param inputReader источник ввода для создания объекта
+     */
+    public AddCommand(CollectionManager collectionManager, InputReader inputReader) {
+        super("add", "добавить новый элемент в коллекцию");
         this.collectionManager = collectionManager;
-        this.console = console;
+        this.inputReader = inputReader;
     }
 
     @Override
@@ -22,14 +32,14 @@ public class AddCommand extends AbstractCommand{
         }
 
         System.out.println("Создается новый элемент");
-        HumanBeing person1 = console.readHumanBeing();
+        HumanBeing newPerson = inputReader.readHumanBeing();
 
-        if (person1 == null) {
+        if (newPerson == null) {
             System.out.println("Ошибка во время создания первого элемента");
             return;
         }
 
-        collectionManager.add(person1);
-        System.out.println("Успешно добавлен элемент " + person1.getId());
+        collectionManager.add(newPerson);
+        System.out.println("Успешно добавлен элемент ");
     }
 }

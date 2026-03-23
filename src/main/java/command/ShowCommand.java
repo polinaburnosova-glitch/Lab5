@@ -4,9 +4,17 @@ import manager.CollectionManager;
 import  model.HumanBeing;
 import java.util.Deque;
 
+/**
+ * Команда для вывода всех элементов коллекции.
+ */
 public class ShowCommand extends AbstractCommand {
     private final CollectionManager collectionManager;
 
+    /**
+     * Конструктор.
+     *
+     * @param collectionManager менеджер коллекции
+     */
     public ShowCommand(CollectionManager collectionManager) {
         super("show", "вывести все элементы коллекции");
         this.collectionManager = collectionManager;

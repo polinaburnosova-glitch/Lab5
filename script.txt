@@ -1,0 +1,8 @@
+# Тестовый скрипт
+help
+info
+show
+clear
+help
+info
+exit

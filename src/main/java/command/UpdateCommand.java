@@ -1,22 +1,32 @@
 package command;
 
 import manager.CollectionManager;
-import console.AppConsole;
+import console.InputReader;
 import model.HumanBeing;
 
+/**
+ * Команда для обновления элемента коллекции по его id.
+ * Запрашивает у пользователя новые значения полей и обновляет элемент.
+ */
 public class UpdateCommand extends AbstractCommand {
     private final CollectionManager collectionManager;
-    private final AppConsole console;
+    private final InputReader inputReader;
 
-    public UpdateCommand(CollectionManager collectionManager, AppConsole console) {
-        super("UpdateCommand", "обновить значение элемента коллекции, id которого равен заданному");
+    /**
+     * Конструктор.
+     *
+     * @param collectionManager менеджер коллекции
+     * @param inputReader источник ввода для создания объекта
+     */
+    public UpdateCommand(CollectionManager collectionManager, InputReader inputReader) {
+        super("update", "обновить значение элемента коллекции, id которого равен заданному");
         this.collectionManager = collectionManager;
-        this.console = console;
+        this.inputReader = inputReader;
     }
 
     public void execute(String[] args) {
         if (args.length == 0) {
-            System.out.println("Ошибка: команда требует на взод аргумент");
+            System.out.println("Ошибка: команда требует на вход аргумент");
             return;
         }
 
@@ -36,18 +46,18 @@ public class UpdateCommand extends AbstractCommand {
 
         HumanBeing existingPerson = collectionManager.getById(id);
         if (existingPerson == null) {
-            System.out.println("Ошибка: элемент " + id + "не найден");
+            System.out.println("Ошибка: элемент " + id + " не найден");
             return;
         }
 
-        HumanBeing updatedPerson = console.readHumanBeing();
+        HumanBeing updatedPerson = inputReader.readHumanBeing();
 
         if (updatedPerson == null) {
-            System.out.println("Ошибка во время слздания элемента");
+            System.out.println("Ошибка во время создания элемента");
             return;
         }
 
         collectionManager.updateById(id, updatedPerson);
-        System.out.println("Элемент" + id + "обновлен");
+        System.out.println("Элемент " + id + " обновлен");
     }
 }

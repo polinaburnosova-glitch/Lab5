@@ -3,9 +3,18 @@ package command;
 import manager.CommandManager;
 import manager.CollectionManager;
 
+/**
+ * Команда для вывода информации о коллекции.
+ * Выводит тип коллекции, дату инициализации и количество элементов.
+ */
 public class InfoCommand extends AbstractCommand{
     private final CollectionManager collectionManager;
 
+    /**
+     * Конструктор.
+     *
+     * @param collectionManager менеджер коллекции
+     */
     public InfoCommand(CollectionManager collectionManager) {
         super("info", "информация о коллекции (тип, дата инициализации, количество элементов)");
         this.collectionManager = collectionManager;

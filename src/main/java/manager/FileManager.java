@@ -4,22 +4,55 @@ import model.*;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Deque;
 import java.util.ArrayDeque;
 
+/**
+ * Менеджер для работы с файлами.
+ * Отвечает за загрузку коллекции из XML-файла и сохранение её в файл.
+ * Использует Jackson XML для сериализации/десериализации.
+ * Чтение осуществляется через {@link BufferedInputStream},
+ * запись через {@link FileOutputStream} (согласно ТЗ).
+ *
+ * @author Your Name
+ * @version 1.0
+ * @see CollectionManager
+ * @see CollectionWrapper
+ */
 public class FileManager {
     private final String fileName;
     private final XmlMapper xmlMapper;
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
+    /**
+     * Конструктор. Инициализирует Jackson XmlMapper с поддержкой LocalDateTime.
+     *
+     * @param fileName имя файла для работы
+     */
     public FileManager(String fileName) {
         this.fileName = fileName;
+
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DATE_FORMATTER));
+        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DATE_FORMATTER));
+
         this.xmlMapper = XmlMapper.builder()
-                .addModule(new JavaTimeModule())
+                .addModule(javaTimeModule)
                 .configure(SerializationFeature.INDENT_OUTPUT, true)
                 .build();
     }
 
+    /**
+     * Загружает коллекцию из XML-файла.
+     *
+     * @return загруженная коллекция (пустая, если файл не существует или повреждён)
+     * @throws IOException если ошибка доступа к файлу
+     */
     public Deque<HumanBeing> loadCollection() throws IOException {
         File file = new File(fileName);
 
@@ -39,6 +72,13 @@ public class FileManager {
             return new ArrayDeque<>();
         }
     }
+
+    /**
+     * Сохраняет коллекцию в XML-файл.
+     *
+     * @param collection коллекция для сохранения
+     * @throws IOException если ошибка доступа к файлу
+     */
     public void saveCollection(Deque<HumanBeing> collection) throws IOException {
         File file = new File(fileName);
 

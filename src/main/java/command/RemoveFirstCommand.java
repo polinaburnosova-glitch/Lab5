@@ -3,11 +3,19 @@ package command;
 import manager.CollectionManager;
 import model.HumanBeing;
 
+/**
+ * Команда для удаления первого элемента из коллекции.
+ */
 public class RemoveFirstCommand extends AbstractCommand{
     private final CollectionManager collectionManager;
 
+    /**
+     * Конструктор.
+     *
+     * @param collectionManager менеджер коллекции
+     */
     public RemoveFirstCommand(CollectionManager collectionManager) {
-        super("RemoveFirstCommand", "удалить первый элемент из коллекции");
+        super("remove_first", "удалить первый элемент из коллекции");
         this.collectionManager = collectionManager;
     }
 

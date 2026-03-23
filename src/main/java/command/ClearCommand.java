@@ -2,9 +2,18 @@ package command;
 
 import manager.CollectionManager;
 
+/**
+ * Команда для очистки коллекции.
+ * Удаляет все элементы из коллекции.
+ */
 public class ClearCommand extends AbstractCommand {
     private final CollectionManager collectionManager;
 
+    /**
+     * Конструктор.
+     *
+     * @param collectionManager менеджер коллекции
+     */
     public ClearCommand(CollectionManager collectionManager) {
         super("clear", "очистить коллекцию");
         this.collectionManager = collectionManager;

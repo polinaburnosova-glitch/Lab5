@@ -2,11 +2,19 @@ package command;
 
 import manager.CollectionManager;
 
+/**
+ * Команда для удаления элемента по его id.
+ */
 public class RemoveByIdCommand extends AbstractCommand {
     private final CollectionManager collectionManager;
 
+    /**
+     * Конструктор.
+     *
+     * @param collectionManager менеджер коллекции
+     */
     public RemoveByIdCommand(CollectionManager collectionManager) {
-        super("removeById", "удалить элемент из коллекции по его id");
+        super("remove_by_id", "удалить элемент из коллекции по его id");
         this.collectionManager = collectionManager;
     }
 
@@ -39,7 +47,7 @@ public class RemoveByIdCommand extends AbstractCommand {
 
             }
         } catch (NumberFormatException e) {
-                System.out.println("Ошибка: id элемента должен быть целым положительным числом");
+            System.out.println("Ошибка: id элемента должен быть целым положительным числом");
         }
     }
 }

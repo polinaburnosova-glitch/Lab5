@@ -6,11 +6,20 @@ import model.HumanBeing;
 import java.util.Arrays;
 import java.util.Deque;
 
+/**
+ * Команда для фильтрации элементов по настроению.
+ * Выводит все элементы, у которых поле mood равно заданному значению.
+ */
 public class FilterByMoodCommand extends AbstractCommand{
     private final CollectionManager collectionManager;
 
+    /**
+     * Конструктор.
+     *
+     * @param collectionManager менеджер коллекции
+     */
     public FilterByMoodCommand(CollectionManager collectionManager) {
-        super("FilterByMood", "вывести элементы, значение поля mood которых равно заданному");
+        super("filter_by_mood", "вывести элементы, значение поля mood которых равно заданному");
         this.collectionManager = collectionManager;
     }
 
