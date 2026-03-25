@@ -146,7 +146,7 @@ public class FileInputReader implements InputReader {
                         line.equalsIgnoreCase("update")) {
 
                     String[] objectLines = new String[9];
-                    for (int i = 0; i < 9; i++) {
+                    for (int i = 0; i < 9; i++) { // TODO пускай там скобки будут
                         objectLines[i] = reader.readLine();
                         if (objectLines[i] == null) {
                             System.out.println("Недостаточно строк для создания объекта");
