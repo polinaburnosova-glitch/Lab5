@@ -1,8 +1,8 @@
-# Тестовый скрипт
 help
 info
+add(John, 10.5, 20.3, true, false, 100.5, Rock, SHOTGUN, SORROW, true)
+add (Jane, 15.0, 25.0, false, true, 200.0, Jazz, BAT, LONGING, false)
+add (Bob, 5.0, 5.0, true, true, 50.0, Blues, KNIFE, GLOOM, true)
 show
-clear
-help
-info
+save
 exit

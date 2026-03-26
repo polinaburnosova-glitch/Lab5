@@ -148,10 +148,15 @@ public class CollectionManager {
      * @param updatedPerson новый объект (без id и даты)
      */
     public void updateById(Long id, HumanBeing updatedPerson) {
+        HumanBeing lastPerson = getById(id);
+        if (lastPerson == null) {
+            return;
+        }
         removeById(id);
+
         HumanBeing completedPerson = new HumanBeing(
                 id,
-                LocalDateTime.now(),
+                lastPerson.getCreationDate(),
                 updatedPerson.getName(),
                 updatedPerson.getCoordinates(),
                 updatedPerson.getRealHero(),

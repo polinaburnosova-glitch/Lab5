@@ -6,12 +6,24 @@ import model.HumanBeing;
 import console.InputReader;
 
 /**
- * Команда для добавления элемента, если он меньше минимального.
- * Создаёт новый элемент и добавляет его, если он меньше минимального.
+ * Команда для добавления элемента в коллекцию, если его значение меньше наименьшего элемента.
+ *
+ * <p>Команда создаёт новый объект HumanBeing и добавляет его в коллекцию только в том случае,
+ * если новый объект меньше (по id) текущего минимального элемента коллекции.
+ * Если коллекция пуста, элемент добавляется без проверки.
+ *
+ * <p>Сравнение выполняется с использованием метода {@link HumanBeing#compareTo(HumanBeing)},
+ * который сравнивает элементы по id. Таким образом, "меньше" означает "имеет меньший id".
+ *
+ * <p>Формат команды: add_if_min
+ * <br>После вызова команды пользователь вводит все поля объекта по очереди.
+ * @see CollectionManager
+ * @see InputReader
+ * @see AddIfMaxCommand
  */
 public class AddIfMinCommand extends AbstractCommand{
     private final CollectionManager collectionManager;
-    private final InputReader inputReader;
+    private InputReader inputReader;
 
     /**
      * Конструктор.
@@ -25,6 +37,40 @@ public class AddIfMinCommand extends AbstractCommand{
         this.inputReader = inputReader;
     }
 
+    /**
+     * Устанавливает источник ввода.
+     * Используется при выполнении скриптов для временной замены источника.
+     *
+     * @param inputReader новый источник ввода
+     */
+    public void setInputReader(InputReader inputReader) {
+        this.inputReader = inputReader;
+    }
+
+    /**
+     * Возвращает текущий источник ввода.
+     *
+     * @return текущий источник ввода
+     */
+    public InputReader getInputReader() {
+        return inputReader;
+    }
+
+    /**
+     * Выполняет команду добавления элемента с условием "меньше минимального".
+     *
+     * <p>Алгоритм работы:
+     * <ol>
+     *   <li>Проверяет, что команда не принимает аргументов</li>
+     *   <li>Получает минимальный элемент коллекции (через {@link CollectionManager#getMin()})</li>
+     *   <li>Создаёт новый объект HumanBeing через InputReader</li>
+     *   <li>Если коллекция пуста — добавляет элемент без проверки</li>
+     *   <li>Если новый объект меньше минимального (compareTo() < 0) — добавляет элемент</li>
+     *   <li>В противном случае выводит сообщение об отказе</li>
+     * </ol>
+     *
+     * @param args аргументы команды (не должны передаваться)
+     */
     @Override
     public void execute(String[] args) {
         if (args.length > 0) {
