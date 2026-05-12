@@ -6,24 +6,50 @@ import model.HumanBeing;
 
 /**
  * Команда для обновления элемента коллекции по его id.
- * Запрашивает у пользователя новые значения полей и обновляет элемент.
+ * Запрашивает у пользователя новые значения полей и обновляет существующий элемент.
+ * @see CollectionManager
+ * @see InputReader
  */
 public class UpdateCommand extends AbstractCommand {
     private final CollectionManager collectionManager;
-    private final InputReader inputReader;
+    private InputReader inputReader;
 
     /**
-     * Конструктор.
+     * Конструктор команды update.
      *
-     * @param collectionManager менеджер коллекции
-     * @param inputReader источник ввода для создания объекта
+     * @param collectionManager менеджер коллекции, в которой будет обновлён элемент
+     * @param inputReader источник ввода для чтения полей нового объекта
      */
     public UpdateCommand(CollectionManager collectionManager, InputReader inputReader) {
-        super("update", "обновить значение элемента коллекции, id которого равен заданному");
+        super("update", "обновить значение элемента коллекции по его id");
         this.collectionManager = collectionManager;
         this.inputReader = inputReader;
     }
 
+    /**
+     * Устанавливает источник ввода.
+     * Используется при выполнении скриптов для временной замены источника.
+     *
+     * @param inputReader новый источник ввода
+     */
+    public void setInputReader(InputReader inputReader) {
+        this.inputReader = inputReader;
+    }
+
+    /**
+     * Возвращает текущий источник ввода.
+     *
+     * @return текущий источник ввода
+     */
+    public InputReader getInputReader() {
+        return inputReader;
+    }
+
+    /**
+     * Выполняет команду обновления элемента.
+     * @param args аргументы команды: args[0] — id обновляемого элемента
+     */
+    @Override
     public void execute(String[] args) {
         if (args.length == 0) {
             System.out.println("Ошибка: команда требует на вход аргумент");

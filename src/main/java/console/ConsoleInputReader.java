@@ -48,14 +48,17 @@ public class ConsoleInputReader implements InputReader {
      * @return непустое имя
      */
     private String readName() {
-        while (true) {
-            System.out.print("Введите имя: ");
-            String input = scanner.nextLine().trim();
-            if (!input.isEmpty()) {
-                return input;
+        String input;
+        do {
+            System.out.println("Введите имя: ");
+            input = scanner.nextLine().trim();
+            if (input.isEmpty()) {
+                System.out.println("Ошибка: имя не может быть пустой строкой");
             }
-            System.out.println("Ошибка: имя не может быть пустым!");
         }
+        while (input.isEmpty());
+        return input;
+
     }
 
     /**

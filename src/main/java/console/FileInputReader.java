@@ -5,104 +5,110 @@ import model.*;
 import java.io.*;
 
 /**
- * Класс для чтения команд из файла (скрипта).
+ * Класс для чтения и выполнения команд из файла-скрипта.
  *
- * <p>Этот класс позволяет выполнять команды, записанные в текстовом файле.
- * Он читает файл построчно и передаёт каждую команду в CommandManager.
- * Также он умеет читать объекты HumanBeing из файла для команд add/update.
+ * <p>Поддерживает два типа команд:
+ * <ul>
+ *   <li>Обычные команды (без параметров): help, info, show, clear, save, exit</li>
+ *   <li>Команды с параметрами: add, add_if_max, add_if_min, update</li>
+ * </ul>
+ *
+ * <p>Команды с параметрами записываются в формате:
+ * <pre>
+ * add(имя, x, y, realHero, hasToothpick, impactSpeed, soundtrackName, weaponType, mood, cool)
+ * </pre>
  * @see InputReader
  * @see CommandManager
  */
 public class FileInputReader implements InputReader {
 
-    /** Менеджер команд, который будет выполнять прочитанные команды */
+
     private final CommandManager commandManager;
 
-    /**
-     * Читает файл. Позволяет читать файл построчно.
-     * Использует буферизацию для эффективности.
-     */
+
     private final BufferedReader reader;
 
     /**
-     * Хранилище строк, которые нужно будет прочитать при следующем вызове readHumanBeing().
-     * Используется, когда в скрипте встречается команда add/update.
-     * Мы читаем все поля объекта сразу и сохраняем их здесь,
-     * чтобы потом передать в метод readHumanBeing().
+     * Временно сохранённый объект HumanBeing для передачи в команду.
+     * Используется, когда команда (add, update и т.д.) требует объект,
+     * который уже был прочитан из файла.
      */
-    private String[] readingLines;
+    private HumanBeing presentPerson;
 
     /**
      * Конструктор. Открывает файл для чтения.
      *
      * @param fileName имя файла со скриптом
      * @param commandManager менеджер команд для выполнения
-     * @throws FileNotFoundException если файл не найден
+     * @throws FileNotFoundException если файл с указанным именем не найден
      */
     public FileInputReader(String fileName, CommandManager commandManager) throws FileNotFoundException {
         this.commandManager = commandManager;
         this.reader = new BufferedReader(new FileReader(fileName));
-        this.readingLines = null;
+        this.presentPerson = null;
     }
 
     /**
-     * Читает один объект HumanBeing из файла.
+     * Возвращает объект HumanBeing для выполнения команды.
      *
-     * <p>Этот метод вызывается командой add (или update) когда нужно создать объект.
-     * Он читает 9 строк из файла (все поля человека) и собирает из них объект.
-     * @return созданный объект HumanBeing, или null если ошибка чтения
+     * <p>Если есть сохранённый объект (presentPerson), возвращает его и очищает.
+     * В противном случае возвращает null (скрипт не использует построчный ввод).
+     *
+     * @return объект HumanBeing или null
      */
     @Override
     public HumanBeing readHumanBeing() {
-        try {
-            if (readingLines != null && readingLines.length > 0) {
-                String[] lines = readingLines;
-                readingLines = null;
-                return parseHumanBeing(lines);
-            }
-
-            String[] lines = new String[9];
-            for (int i = 0; i < 9; i++) {
-                lines[i] = reader.readLine();
-                if (lines[i] == null) {
-                    return null;
-                }
-                lines[i] = lines[i].trim();
-            }
-            return parseHumanBeing(lines);
+        if (presentPerson != null) {
+            HumanBeing person = presentPerson;
+            presentPerson = null;
+            return person;
         }
-
-        catch (IOException e) {
-            System.out.println("Ошибка во время чтения из файла " + e.getMessage());
-            return null;
-        }
+        return null;
     }
 
     /**
-     * Превращает массив строк в объект HumanBeing.
+     * Создаёт объект HumanBeing из массива строк-параметров.
      *
-     * <p>Этот метод парсит строки в правильные типы данных.
-     * @param lines массив из 10 строк (9 полей + car.cool)
-     * @return объект HumanBeing, или null если ошибка парсинга
+     * <p>Ожидает массив из 10 элементов в следующем порядке:
+     * <ol>
+     *   <li>name - имя человека</li>
+     *   <li>x - координата X</li>
+     *   <li>y - координата Y</li>
+     *   <li>realHero - true/false</li>
+     *   <li>hasToothpick - true/false</li>
+     *   <li>impactSpeed - скорость (макс 657)</li>
+     *   <li>soundtrackName - название саундтрека</li>
+     *   <li>weaponType - тип оружия (HAMMER/SHOTGUN/KNIFE/BAT)</li>
+     *   <li>mood - настроение (SORROW/LONGING/GLOOM/APATHY или пустая строка)</li>
+     *   <li>cool - крутая ли машина (true/false)</li>
+     * </ol>
+     *
+     * @param args массив строк с параметрами
+     * @return созданный объект HumanBeing, или null при ошибке парсинга
      */
-    private HumanBeing parseHumanBeing(String[] lines) {
+    private HumanBeing createHumanBeingFromArgs(String[] args) {
         try {
-            String name = lines[0];
-            double x = Double.parseDouble(lines[1]);
-            float y = Float.parseFloat(lines[2]);
+            if (args.length < 10) {
+                System.out.println("Недостаточно параметров. Необходимо ввести 10, получено: " + args.length);
+                return null;
+            }
+
+            String name = args[0].trim();
+            double x = Double.parseDouble(args[1].trim());
+            float y = Float.parseFloat(args[2].trim());
             Coordinates coordinates = new Coordinates(x, y);
 
-            boolean realHero = Boolean.parseBoolean(lines[3]);
-            boolean hasToothpick = Boolean.parseBoolean(lines[4]);
-            float impactSpeed = Float.parseFloat(lines[5]);
-            String soundtrackName = lines[6];
+            boolean realHero = Boolean.parseBoolean(args[3].trim());
+            boolean hasToothpick = Boolean.parseBoolean(args[4].trim());
+            float impactSpeed = Float.parseFloat(args[5].trim());
+            String soundtrackName = args[6].trim();
 
-            WeaponType weaponType = WeaponType.valueOf(lines[7].toUpperCase());
+            WeaponType weaponType = WeaponType.valueOf(args[7].trim().toUpperCase());
 
-            String moodLine = lines[8];
+            String moodLine = args[8].trim();
             Mood mood = moodLine.isEmpty() ? null : Mood.valueOf(moodLine.toUpperCase());
 
-            boolean cool = Boolean.parseBoolean(lines[9]);
+            boolean cool = Boolean.parseBoolean(args[9].trim());
             Car car = new Car(cool);
 
             return new HumanBeing(name, coordinates, realHero, hasToothpick,
@@ -117,13 +123,15 @@ public class FileInputReader implements InputReader {
     /**
      * Выполняет весь скрипт из файла.
      *
-     * <p>Этот метод читает файл построчно и выполняет каждую команду.
-     * Пустые строки и строки, начинающиеся с #, пропускаются (комментарии).
+     * <p>Читает файл построчно. Пустые строки и строки, начинающиеся с '#',
+     * игнорируются (комментарии).
      *
-     * <p>Если встречается команда add/add_if_max/add_if_min/update,
-     * метод читает следующие 9 строк (поля объекта) и сохраняет их
-     * в переменную readingLines. При следующем вызове readHumanBeing()
-     * эти строки будут использованы для создания объекта.
+     * <p>Если строка содержит скобки, она интерпретируется как команда с параметрами
+     * в формате: команда(параметр1, параметр2, ...). Параметры извлекаются,
+     * создаётся объект HumanBeing, который сохраняется для команды.
+     *
+     * <p>Если строка не содержит скобок, она выполняется как обычная команда
+     * (help, info, show, exit и т.д.).
      */
     public void executeScript() {
         try {
@@ -140,24 +148,31 @@ public class FileInputReader implements InputReader {
 
                 System.out.println("Строка №" + lineNumber + ": " + line);
 
-                if (line.equalsIgnoreCase("add") ||
-                        line.equalsIgnoreCase("add_if_max") ||
-                        line.equalsIgnoreCase("add_if_min") ||
-                        line.equalsIgnoreCase("update")) {
+                if (line.contains("(") && line.contains(")")) {
 
-                    String[] objectLines = new String[9];
-                    for (int i = 0; i < 9; i++) { // TODO пускай там скобки будут
-                        objectLines[i] = reader.readLine();
-                        if (objectLines[i] == null) {
-                            System.out.println("Недостаточно строк для создания объекта");
-                            break;
-                        }
-                        objectLines[i] = objectLines[i].trim();
+                    int bracketIndex = line.indexOf('(');
+                    String cmdName = line.substring(0, bracketIndex).trim().toLowerCase();
+
+                    int start = line.indexOf('(');
+                    int end = line.lastIndexOf(')');
+                    String params = line.substring(start + 1, end);
+
+                    String[] args = params.split(",");
+                    for (int i = 0; i < args.length; i++) {
+                        args[i] = args[i].trim();
                     }
-                    this.readingLines = objectLines;
-                }
 
-                commandManager.executeCommand(line);
+                    HumanBeing person = createHumanBeingFromArgs(args);
+                    if (person != null) {
+                        System.out.println("Объект создан: " + person.getName());
+                        presentPerson = person;
+                        commandManager.executeCommand(cmdName);
+                    } else {
+                        System.out.println("Объект не создан");
+                    }
+                } else {
+                    commandManager.executeCommand(line);
+                }
             }
 
             System.out.println("Скрипт выполнен");
